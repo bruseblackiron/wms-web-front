@@ -42,3 +42,12 @@ export function delHouse(id) {
     method: 'delete'
   })
 }
+
+//開啟禁用倉庫
+export function publishHouse(id, publish) {
+  return request({
+    url: '/wms/house/publish/' + id + '/' + publish,
+    method: 'post'
+  })
+}
+

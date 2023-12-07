@@ -10,16 +10,16 @@
               @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="是否发布" prop="isPublish">
-          <el-select v-model="queryParams.isPublish" placeholder="请选择是否发布" clearable>
-            <el-option
-                v-for="dict in is_publish"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-            />
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="是否发布" prop="isPublish">-->
+<!--          <el-select v-model="queryParams.isPublish" placeholder="请选择是否发布" clearable>-->
+<!--            <el-option-->
+<!--                v-for="dict in is_publish"-->
+<!--                :key="dict.value"-->
+<!--                :label="dict.label"-->
+<!--                :value="dict.value"-->
+<!--            />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="创建时间" style="width: 308px">
           <el-date-picker
               v-model="daterangeCreateTime"
@@ -59,14 +59,21 @@
         </el-col>
         <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
-      <el-table v-loading="loading" :data="houseList" @selection-change="handleSelectionChange">
+      <el-table  border v-loading="loading" :data="houseList" @selection-change="handleSelectionChange">
         <el-table-column label="仓库编号" align="center" prop="id" />
         <el-table-column label="仓库名称" align="center" prop="wareHouseName" />
-        <el-table-column label="是否发布" align="center" prop="isPublish">
-          <template #default="scope">
-            <dict-tag :options="is_publish" :value="scope.row.isPublish"/>
-          </template>
-        </el-table-column>
+<!--        <el-table-column label="是否发布" align="center" prop="isPublish">-->
+<!--          <template #default="scope">-->
+<!--            <el-switch-->
+<!--                v-model="scope.row.isPublish"-->
+<!--                active-value="1"-->
+<!--                inactive-value="0"-->
+<!--                active-text="已启用"-->
+<!--                inactive-text="已禁用"-->
+<!--                @change="handlePublishClick(scope.row, scope.$index)">-->
+<!--            </el-switch>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <el-table-column label="创建时间" align="center" prop="createTime" width="180">
           <template #default="scope">
             <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -110,7 +117,7 @@
 </template>
 
 <script setup name="House">
-import { listHouse, getHouse, delHouse, addHouse, updateHouse } from "@/api/wms/house";
+import { listHouse, getHouse, delHouse, addHouse, updateHouse , publishHouse} from "@/api/wms/house";
 
 const { proxy } = getCurrentInstance();
 const { is_publish } = proxy.useDict('is_publish');
@@ -250,6 +257,22 @@ function handleExport() {
   proxy.download('wms/house/export', {
     ...queryParams.value
   }, `house_${new Date().getTime()}.xlsx`)
+}
+
+/**
+ * switch change事件
+ * @param row
+ * @param rowIndex
+ */
+const handlePublishClick = (row, rowIndex) => {
+  let message = row.isPublish === '0'? '停用' : '启用'
+  proxy.$modal.confirm('您确定要' + message + '此仓库吗？').then(function() {
+    return publishHouse(row.id, row.isPublish);
+  }).then(() => {
+    proxy.$modal.msgSuccess(`${message}成功`);
+  }).catch(() => {
+    row.isPublish = row.isPublish === "0" ? "1" : "0";
+  });
 }
 
 getList();
