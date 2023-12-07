@@ -1,6 +1,7 @@
 <template>
    <div class="app-container">
-      <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
+     <el-card class="search-card" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryRef" :inline="true">
          <el-form-item label="部门名称" prop="deptName">
             <el-input
                v-model="queryParams.deptName"
@@ -25,7 +26,9 @@
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
          </el-form-item>
       </el-form>
+     </el-card>
 
+     <el-card class="table-card">
       <el-row :gutter="10" class="mb8">
          <el-col :span="1.5">
             <el-button
@@ -75,6 +78,7 @@
             </template>
          </el-table-column>
       </el-table>
+     </el-card>
 
       <!-- 添加或修改部门对话框 -->
       <el-dialog :title="title" v-model="open" width="600px" append-to-body>

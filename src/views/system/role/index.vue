@@ -1,6 +1,7 @@
 <template>
    <div class="app-container">
-      <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true" label-width="68px">
+     <el-card class="search-card" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryRef" :inline="true" label-width="68px">
          <el-form-item label="角色名称" prop="roleName">
             <el-input
                v-model="queryParams.roleName"
@@ -49,6 +50,8 @@
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
          </el-form-item>
       </el-form>
+     </el-card>
+     <el-card class="table-card">
       <el-row :gutter="10" class="mb8">
          <el-col :span="1.5">
             <el-button
@@ -138,6 +141,7 @@
          v-model:limit="queryParams.pageSize"
          @pagination="getList"
       />
+     </el-card>
 
       <!-- 添加或修改角色配置对话框 -->
       <el-dialog :title="title" v-model="open" width="500px" append-to-body>

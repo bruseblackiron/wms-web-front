@@ -1,7 +1,8 @@
 
 <template>
    <div class="app-container">
-      <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true">
+     <el-card class="search-card" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryRef" :inline="true">
          <el-form-item label="用户名称" prop="userName">
             <el-input
                v-model="queryParams.userName"
@@ -25,7 +26,8 @@
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
          </el-form-item>
       </el-form>
-
+     </el-card>
+     <el-card class="table-card">
       <el-row :gutter="10" class="mb8">
          <el-col :span="1.5">
             <el-button
@@ -88,6 +90,7 @@
          @pagination="getList"
       />
       <select-user ref="selectRef" :roleId="queryParams.roleId" @ok="handleQuery" />
+     </el-card>
    </div>
 </template>
 
